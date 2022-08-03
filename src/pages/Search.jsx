@@ -1,126 +1,73 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Header from '../Components/Header';
-import { searchAlbumsAPIs } from '../services/searchAlbumsAPI';
-import Loading from '../Components/Loading';
-import Album from './Album';
+import searchAlbumsAPI from '../services/searchAlbumsAPI';
+// import Loading from '../Components/Loading';
+// import Album from './Album';
 
 class Search extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: '',
-      inputValue: '',
-      artistAlbuns: null,
-      loadingSearch: false,
-      isResults: false,
-      isArtist: true,
+      search: '',
+
+      // loading: false,
+      // albuns: [],
+      // artist: '',
     };
   }
 
-handleSearch = ({ target: { value } }) => {
-  const inputValue = value
-    .split(' ')
-    .map((name) => name.charAt(0).toUpperCase() + name.slice(1))
-    .join(' ');
-
-  this.setState({ inputValue });
-
-  value.length >= 2
-    ? this.setState({ isArtist: false, name: inputValue })
-    : this.setState({ isArtist: true, name: inputValue });
-};
-
-// console.log(searchAlbumsAPIs(results));
-handleSearch = () => {
-  const { inputValue } = this.state;
-
-  this.setState({ loadingSearch: true });
-
-  searchAlbumsAPI(inputValue).then((result) => {
+  onInputChange = ({ target }) => {
     this.setState({
-      loadingSearch: false,
-      isResults: true,
-      artistAlbuns: result,
-      inputValue: '',
+      search: target.value,
     });
-  });
-};
+  }
 
-resultAlbunSearch = () => {
-  const { artistAlbuns } = this.state;
-  return (
-    <section className="albuns-group">
-      {artistAlbuns.map(
-        ({ collectionId, artistName, collectionName, artworkUrl100 }) => (
-          <Link
-            key={ collectionId }
-            to={ `/album/${collectionId}` }
-            data-testid={ `link-to-album-${collectionId}` }
-          >
-            <Album
-              src={ artworkUrl100 }
-              alt={ collectionName }
-              artistName={ artistName }
-              collectionName={ collectionName }
-              nameId=""
-              albumId=""
-            />
-          </Link>
-        ),
-      )}
-    </section>
-  );
-};
+  // async onButtonClick() {
+  //   const { search } = this.state;
+  //   this.setState({
+  //     search: '',
+  //     // loading: true,
+  //   });
+  //   const albuns = await searchAlbumsAPI(search);
+  //   this.setState({
+  //     albuns,
+  //     // loading: false,
+  //     // artist: search,
+  //   });
+  // }
 
-resultsSearch = () => {
-  const {
-    state: { artistAlbuns, name },
-  } = this;
+  render() {
+    const { search,
+      // loading,
+      //  albuns,
+      //  artist
+    } = this.state;
 
-  return (
-    <>
-      <h2>{`Resultado de álbuns de: ${name}`}</h2>
-      {artistAlbuns.length > 0 ? (
-        this.resultAlbunSearch()
-      ) : (
-        <h3>Nenhum álbum foi encontrado</h3>
-      )}
-    </>
-  );
-};
-
-render() {
-  const { inputValue, loadingSearch, isResults, isArtist } = this.state;
-
-  return (
-    <div>
-      <Header />
-      {loadingSearch ? (
-        <Loading />
-      ) : (
-        <div data-testid="page-search">
+    return (
+      <div data-testid="page-search">
+        <div>
+          <Header />
           <input
-            value={ inputValue }
-            type="text"
+            id="search"
             data-testid="search-artist-input"
-            onChange={ this.handleSearch }
+            type="text"
+            name="search"
+            value={ search }
+            onChange={ this.onInputChange }
           />
-
           <button
-            type="submit"
             data-testid="search-artist-button"
-            disabled={ isArtist }
-            onClick={ this.handleSearch }
+            type="button"
+            disabled={ search.length < 2 }
+            onClick={ this.onButtonClick }
           >
             Pesquisar
           </button>
+
         </div>
-      )}
-      {isResults && this.resultsSearch()}
-    </div>
-  );
-}
+      </div>
+    );
+  }
 }
 
 export default Search;
