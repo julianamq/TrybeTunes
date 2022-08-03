@@ -45,8 +45,7 @@ class App extends React.Component {
             component={ ProfileEdit }
           />
           <Route
-            exact
-            path="/notFound"
+            path="*"
             component={ NotFound }
           />
 
