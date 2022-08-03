@@ -53,15 +53,15 @@ class Login extends Component {
               onClick={ this.saveUser }
               disabled={ disabledButton }
             >
-              Login
+              Entrar
             </button>
           </div>
         ) : (
           <div>
-            {loginStatus === 'pending' ? (
+            {isLogged === 'pending' ? (
               <Loading />
             ) : (
-              <Redirect to="/Search" />
+              <Redirect to="/search" />
               // ou history.push(/Search)
             )}
           </div>

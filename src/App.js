@@ -7,7 +7,7 @@ import Album from './pages/Album';
 import Favorites from './pages/Favorites';
 import Profile from './pages/Profile';
 import ProfileEdit from './pages/ProfileEdit';
-import NaoMapeada from './pages/NaoMapeada';
+import NotFound from './pages/NotFound';
 
 class App extends React.Component {
   render() {
@@ -15,32 +15,39 @@ class App extends React.Component {
       <BrowserRouter>
         <Switch>
           <Route
+            exact
             path="/"
             component={ Login }
           />
           <Route
-            path="/Search"
+            exact
+            path="/search"
             component={ Search }
           />
           <Route
-            path="/Album/:id "
+            exact
+            path="/album/:id "
             component={ Album }
           />
           <Route
-            path="/Favorites"
+            exact
+            path="/favorites"
             component={ Favorites }
           />
           <Route
-            path="/Profile"
+            exact
+            path="/profile"
             component={ Profile }
           />
           <Route
-            path="/ProfileEdit"
+            exact
+            path="/profileEdit"
             component={ ProfileEdit }
           />
           <Route
-            path="/NaoMapeada"
-            component={ NaoMapeada }
+            exact
+            path="/notFound"
+            component={ NotFound }
           />
 
         </Switch>
