@@ -26,7 +26,7 @@ class App extends React.Component {
           />
           <Route
             exact
-            path="/album/:id "
+            path="/album/:id"
             component={ Album }
           />
           <Route
@@ -41,7 +41,7 @@ class App extends React.Component {
           />
           <Route
             exact
-            path="/profileEdit"
+            path="/profile/edit"
             component={ ProfileEdit }
           />
           <Route
