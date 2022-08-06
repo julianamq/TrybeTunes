@@ -1,75 +1,106 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../Components/Header';
-// import searchAlbumsAPI from '../services/searchAlbumsAPI';
+import searchAlbumsAPI from '../services/searchAlbumsAPI';
+import Loading from '../Components/Loading';
+import Album from './Album';
 
 class Search extends React.Component {
   constructor() {
     super();
     this.state = {
       search: '',
-      // albumArtist: [],
-      // artist: '',
-      // loading: false,
+      artist: '',
+      loading: false,
+      response: [],
+      notFound: false,
     };
   }
 
-onInputChange = ({ target }) => {
-  this.setState({
-    search: target.value,
-  });
-}
+  onInputChange = ({ target: { value } }) => {
+    this.setState({
+      search: value,
+    });
+  };
 
-// para pesquisar o artista quando clicar no botao
-// onButtonClick = async () => {
-//   const { search } = this.state;
-//   this.setState({
-//     search: '',
-//     loading: true,
-//   });
-//   const albuns = await searchAlbumsAPI(search).map((album) => {
-//     album.artist = albumArtist;
-//   });
-// }
+  onButtonClick = async () => {
+    const { search } = this.state;
+    this.setState({ loading: true });
+    const response = await searchAlbumsAPI(search);
+    console.log(response);
+    if (response.length !== 0) {
+      this.setState({
+        loading: false,
+        response,
+        artist: search,
+        search: '',
+        notFound: false,
+      });
+    } else {
+      this.setState({
+        loading: false,
+        response,
+        artist: search,
+        search: '',
+        notFound: true,
+      });
+    }
+  };
+  // para pesquisar o artista quando clicar no botao
 
-// // para limpar o input
-// handleReset = () => {
-//   this.setState({
-//     artist: [{}],
-//   });
-// };
+  render() {
+    const {
+      search,
+      loading,
+      response,
+      artist,
+      notFound,
+    } = this.state;
+    // console.log(artist);
+    return (
+      <div data-testid="page-search">
+        <div>
+          <Header />
+          {loading && (<Loading />) }
+          {!loading && notFound ? <div>Nenhum álbum foi encontrado </div> : (
+            <p>
+              { `Resultado de álbuns de: ${artist}`}
 
-render() {
-  const {
-    search,
-    // loading,
-    // albumArtist,
-    // artist
-  } = this.state;
+              {response.map((objeto) => (
+                <Link
+                  key={ objeto.collectionId }
+                  to={ `/album/${objeto.collectionId}` }
+                  data-testid={ `link-to-album-${objeto.collectionId}` }
+                >
+                  { objeto.collectionName }
 
-  return (
-    <div data-testid="page-search">
-      <div>
-        <Header />
+                </Link>
+              )) }
+            </p>
+          ) }
 
-        <input
-          id="search"
-          data-testid="search-artist-input"
-          type="text"
-          name="search"
-          value={ search }
-          onChange={ this.onInputChange }
-        />
-        <button
-          data-testid="search-artist-button"
-          type="button"
-          disabled={ search.length < 2 }
-          onClick={ this.onButtonClick }
-        >
-          Pesquisar
-        </button>
+          <section>
+            <input
+              id="search"
+              data-testid="search-artist-input"
+              type="text"
+              name="search"
+              value={ search }
+              onChange={ this.onInputChange }
+            />
+            <button
+              data-testid="search-artist-button"
+              type="button"
+              disabled={ search.length < 2 }
+              onClick={ this.onButtonClick }
+            >
+              Pesquisar
+            </button>
+          </section>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
-}
+
 export default Search;

@@ -44,7 +44,6 @@ class Header extends React.Component {
           </Link>
         </nav>
         <span data-testid="header-user-name">
-          {' '}
           {user.name}
         </span>
       </>
